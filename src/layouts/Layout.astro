@@ -16,14 +16,14 @@ const { title, description, path, image, jsonLd } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="fr" data-theme="silk">
+<html lang="fr" data-theme="winter">
   <head>
     <BaseHead title={title} description={description} path={path} image={image} jsonLd={jsonLd} />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('theme');
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = saved || (systemDark ? 'dark' : 'silk');
+        const theme = saved || (systemDark ? 'dark' : 'winter');
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>

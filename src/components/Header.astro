@@ -45,11 +45,11 @@ const pathname = Astro.url.pathname;
     const input = document.getElementById('theme-toggle');
     if (!input) return;
 
-    const current = root.getAttribute('data-theme') || 'silk';
+    const current = root.getAttribute('data-theme') || 'winter';
     input.checked = current === 'dark';
 
     input.addEventListener('change', () => {
-      const next = input.checked ? 'dark' : 'silk';
+      const next = input.checked ? 'dark' : 'winter';
       root.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     });
