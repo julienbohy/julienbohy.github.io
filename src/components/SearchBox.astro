@@ -1,0 +1,50 @@
+---
+import { siteConfig } from '../config/site';
+const endpoint = '/api/search-index.json';
+---
+<div class="card mb-6 bg-base-200 shadow-sm">
+  <div class="card-body">
+    <label for="search" class="label-text font-medium">Rechercher un article</label>
+    <input id="search" class="input input-bordered w-full" type="search" placeholder="Titre, description, tag..." />
+    <div id="search-results" class="mt-2 space-y-3"></div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ endpoint, maxResults: siteConfig.searchMaxResults }}>
+  const input = document.getElementById('search');
+  const results = document.getElementById('search-results');
+  let index = [];
+
+  async function loadIndex() {
+    if (index.length) return;
+    const response = await fetch(endpoint);
+    index = await response.json();
+  }
+
+  function render(items) {
+    if (!results) return;
+    if (!items.length) {
+      results.innerHTML = '<p class="text-sm opacity-70">Aucun résultat.</p>';
+      return;
+    }
+
+    results.innerHTML = items
+      .map(
+        (item) => `\n      <article class="card bg-base-100 shadow-sm">\n        <div class="card-body p-4">\n          <h3 class="card-title text-lg"><a class="link link-hover" href="${item.url}">${item.title}</a></h3>\n          <p class="text-sm opacity-80">${item.description}</p>\n        </div>\n      </article>\n    `
+      )
+      .join('');
+  }
+
+  input?.addEventListener('input', async (event) => {
+    await loadIndex();
+    const query = String(event.target.value || '').trim().toLowerCase();
+    if (!query) {
+      results.innerHTML = '';
+      return;
+    }
+
+    const found = index.filter((item) => item.search.includes(query)).slice(0, maxResults);
+
+    render(found);
+  });
+</script>

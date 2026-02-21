@@ -1,0 +1,30 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { siteConfig } from '../../../config/site';
+import { getPublishedPosts } from '../../../lib/content';
+import { paginate } from '../../../lib/content-utils.js';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const totalPages = Math.max(1, Math.ceil(posts.length / siteConfig.blogPageSize));
+  return Array.from({ length: totalPages }, (_, i) => i + 1)
+    .filter((page) => page > 1)
+    .map((page) => ({ params: { page: String(page) } }));
+}
+
+const currentPage = Number(Astro.params.page);
+const posts = await getPublishedPosts();
+const page = paginate(posts, currentPage, siteConfig.blogPageSize);
+---
+<Layout title={`Blog · Page ${page.currentPage}`} description="Articles techniques" path={`/blog/page/${page.currentPage}`}>
+  <section>
+    <h1 class="text-4xl">Blog</h1>
+    <p class="mt-2 text-base-content/70">Page {page.currentPage}</p>
+  </section>
+  <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    {page.items.map((post) => <PostCard post={post} />)}
+  </section>
+  <Pagination currentPage={page.currentPage} totalPages={page.totalPages} basePath="/blog" />
+</Layout>

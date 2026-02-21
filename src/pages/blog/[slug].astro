@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { buildBlogPostingSchema, buildBreadcrumbSchema } from '../../lib/seo';
+import { siteConfig } from '../../config/site';
+import { slugify } from '../../lib/content-utils.js';
+import MediaPlaceholder from '../../components/MediaPlaceholder.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.draft !== true);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const rootUrl = Astro.site ?? new URL(siteConfig.siteUrl);
+
+const postingSchema = buildBlogPostingSchema({
+  title: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date,
+  dateModified: post.data.updatedAt,
+  url: new URL(`/blog/${post.slug}`, rootUrl).toString(),
+});
+
+const breadcrumbs = buildBreadcrumbSchema([
+  { name: 'Accueil', item: new URL('/', rootUrl).toString() },
+  { name: 'Blog', item: new URL('/blog', rootUrl).toString() },
+  { name: post.data.title, item: new URL(`/blog/${post.slug}`, rootUrl).toString() },
+]);
+---
+<Layout title={post.data.title} description={post.data.description} path={`/blog/${post.slug}`} jsonLd={[postingSchema, breadcrumbs]}>
+  <article class="rounded-xl border border-base-300 bg-base-200 p-6 shadow-sm">
+    <MediaPlaceholder
+      title="Image de couverture d'article"
+      hint="Ajoute une image liée au contenu (schéma, architecture, capture IDE). Format recommandé: 1800x1000."
+      ratio="wide"
+    />
+    <p class="mt-4 text-xs uppercase tracking-wide text-base-content/70">{new Date(post.data.date).toLocaleDateString('fr-FR')}</p>
+    <h1 class="mt-2 text-4xl">{post.data.title}</h1>
+    <p class="mt-3 text-base-content/70">{post.data.description}</p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      {post.data.tags.map((tag) => <a class="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-content" href={`/blog/tag/${encodeURIComponent(slugify(tag))}`}>#{tag}</a>)}
+      {post.data.series && <a class="rounded-full border border-base-300 bg-base-100 px-2.5 py-0.5 text-xs font-medium" href={`/blog/series/${encodeURIComponent(slugify(post.data.series))}`}>Série: {post.data.series}</a>}
+    </div>
+    <div class="prose-content mt-6">
+      <Content />
+    </div>
+  </article>
+</Layout>

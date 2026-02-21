@@ -1,0 +1,15 @@
+---
+const { post } = Astro.props;
+---
+<article class="card bg-base-200 shadow-sm">
+  <div class="card-body">
+    <p class="text-xs uppercase tracking-wide opacity-70">{new Date(post.data.date).toLocaleDateString('fr-FR')}</p>
+    <h3 class="card-title text-xl">
+      <a class="link link-hover" href={`/blog/${post.slug}`}>{post.data.title}</a>
+    </h3>
+    <p class="text-sm opacity-80">{post.data.description}</p>
+    <div class="card-actions mt-2">
+      {post.data.tags.map((tag) => <span class="badge badge-outline">#{tag}</span>)}
+    </div>
+  </div>
+</article>

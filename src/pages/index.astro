@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPublishedPosts } from '../lib/content';
+import { deriveSiteNameFromUrl, siteConfig } from '../config/site';
+import { buildPersonSchema } from '../lib/seo';
+
+const posts = (await getPublishedPosts()).slice(0, 3);
+const siteName = deriveSiteNameFromUrl((Astro.site ?? new URL(siteConfig.siteUrl)).toString());
+
+const personSchema = buildPersonSchema({
+  name: siteName,
+  headline: 'Développeur web full-stack',
+  url: (Astro.site ?? new URL(siteConfig.siteUrl)).toString(),
+});
+---
+<Layout title="Accueil" description="Portfolio, CV et blog technique sans base de données." path="/" jsonLd={personSchema}>
+  <section>
+    <h1 class="text-4xl md:text-5xl">Articles récents</h1>
+    <p class="mt-3 max-w-2xl opacity-80">
+      {siteName} partage des contenus techniques autour d’Astro, de la performance et de la qualité logicielle.
+    </p>
+    <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+
+  <section class="mt-10 grid gap-4 md:grid-cols-2">
+    <article class="card bg-base-200 shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title text-2xl">CV</h2>
+        <p class="text-sm opacity-80">Consultez mon parcours, mes compétences et mes expériences.</p>
+        <div class="card-actions mt-3">
+          <a class="btn btn-primary btn-sm" href="/cv">Voir le CV</a>
+        </div>
+      </div>
+    </article>
+    <article class="card bg-base-200 shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title text-2xl">Contact</h2>
+        <p class="text-sm opacity-80">Disponible pour missions freelance et collaborations long terme.</p>
+        <div class="card-actions mt-3">
+          <a class="btn btn-outline btn-sm" href="/contact">Me contacter</a>
+        </div>
+      </div>
+    </article>
+  </section>
+</Layout>

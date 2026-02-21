@@ -1,0 +1,15 @@
+---
+const { project } = Astro.props;
+---
+<article class="card bg-base-200 shadow-sm">
+  <div class="card-body">
+    <p class="text-xs uppercase tracking-wide opacity-70">{new Date(project.data.date).toLocaleDateString('fr-FR')}</p>
+    <h3 class="card-title text-xl">
+      <a class="link link-hover" href={`/portfolio/${project.slug}`}>{project.data.title}</a>
+    </h3>
+    <p class="text-sm opacity-80">{project.data.summary}</p>
+    <div class="card-actions mt-2">
+      {project.data.tech.map((tech) => <span class="badge badge-secondary badge-outline">{tech}</span>)}
+    </div>
+  </div>
+</article>

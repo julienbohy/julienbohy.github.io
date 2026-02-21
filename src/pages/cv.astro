@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import cvData from '../content/cv/cv.json';
+import MediaPlaceholder from '../components/MediaPlaceholder.astro';
+---
+<Layout title="CV" description="Parcours et compétences" path="/cv">
+  <section class="rounded-xl border border-base-300 bg-base-200 p-6 shadow-sm">
+    <div class="grid gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
+      <MediaPlaceholder
+        title="Photo de profil CV"
+        hint="Photo professionnelle, fond neutre, bonne lumière. Format recommandé: 1200x1600."
+        ratio="portrait"
+      />
+      <div>
+        <h1 class="text-4xl">{cvData.name}</h1>
+        <p class="mt-2 text-base-content/70">{cvData.headline} · {cvData.location}</p>
+        <p class="mt-4 text-sm text-base-content/70">{cvData.summary}</p>
+        <button class="mt-5 inline-flex h-10 items-center rounded-md bg-foreground px-4 text-sm font-medium text-background hover:bg-foreground/90" type="button" onclick="window.print()">Exporter en PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mt-8 rounded-xl border border-base-300 bg-base-200 p-6 shadow-sm">
+    <h2 class="text-3xl">Expériences</h2>
+    <div class="mt-4 space-y-6">
+      {cvData.experiences.map((item) => (
+        <article class="rounded-lg border border-base-300 bg-base-100 p-4">
+          <h3 class="text-xl">{item.role} · {item.company}</h3>
+          <p class="mt-1 text-xs uppercase tracking-wide text-base-content/70">{item.start} — {item.end}</p>
+          <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-base-content/70">
+            {item.highlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-8 rounded-xl border border-base-300 bg-base-200 p-6 shadow-sm">
+    <h2 class="text-3xl">Formation</h2>
+    <div class="mt-3 space-y-2 text-sm text-base-content/70">
+      {cvData.education.map((item) => <p>{item.degree} · {item.school} ({item.year})</p>)}
+    </div>
+
+    <h2 class="mt-6 text-3xl">Compétences</h2>
+    <div class="mt-3 flex flex-wrap gap-2">
+      {cvData.skills.map((skill) => <span class="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-content">{skill}</span>)}
+    </div>
+
+    <h2 class="mt-6 text-3xl">Langues</h2>
+    <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-base-content/70">
+      {cvData.languages.map((language) => <li>{language}</li>)}
+    </ul>
+
+    <h2 class="mt-6 text-3xl">Certifications</h2>
+    <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-base-content/70">
+      {cvData.certifications.map((certification) => <li>{certification}</li>)}
+    </ul>
+
+    <h2 class="mt-6 text-3xl">Liens</h2>
+    <div class="mt-3 flex flex-wrap gap-2">
+      {cvData.links.map((link) => (
+        <a class="rounded-full border border-base-300 bg-base-100 px-3 py-1 text-xs font-medium hover:bg-base-200" href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
+      ))}
+    </div>
+  </section>
+</Layout>

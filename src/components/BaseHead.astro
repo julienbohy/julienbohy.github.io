@@ -1,0 +1,47 @@
+---
+import { deriveSiteNameFromUrl, siteConfig } from '../config/site';
+import { buildCanonical } from '../lib/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+  title = deriveSiteNameFromUrl(siteConfig.siteUrl),
+  description = 'Portfolio, CV et articles techniques.',
+  path = '/',
+  image,
+  jsonLd,
+} = Astro.props;
+
+const site = Astro.site ?? new URL(siteConfig.siteUrl);
+const canonical = buildCanonical(site, path);
+const fullTitle = `${title} | ${deriveSiteNameFromUrl(site.toString())}`;
+const ogImage = image ? new URL(image, site).toString() : undefined;
+const jsonLdArray = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<meta name="generator" content={Astro.generator} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{canonical && <link rel="canonical" href={canonical} />}
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+{canonical && <meta property="og:url" content={canonical} />}
+{ogImage && <meta property="og:image" content={ogImage} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+{jsonLdArray.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>)}

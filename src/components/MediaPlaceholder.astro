@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  hint: string;
+  ratio?: 'landscape' | 'square' | 'portrait' | 'wide';
+}
+
+const { title, hint, ratio = 'landscape' } = Astro.props;
+
+const ratioClassMap = {
+  landscape: 'aspect-[16/10]',
+  square: 'aspect-square',
+  portrait: 'aspect-[3/4]',
+  wide: 'aspect-[21/9]',
+};
+
+const ratioClass = ratioClassMap[ratio] ?? ratioClassMap.landscape;
+---
+<div class={`relative w-full overflow-hidden rounded-lg border border-dashed border-base-300/80 bg-base-200/60 ${ratioClass}`}>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,.35),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,.2),transparent_35%)]"></div>
+  <div class="relative z-10 flex h-full flex-col justify-between p-4">
+    <p class="text-xs uppercase tracking-wide text-base-content/70-foreground">Image placeholder</p>
+    <div>
+      <p class="text-sm font-semibold text-base-content">{title}</p>
+      <p class="mt-1 text-xs leading-relaxed text-base-content/70-foreground">{hint}</p>
+    </div>
+  </div>
+</div>

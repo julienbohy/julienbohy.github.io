@@ -1,0 +1,12 @@
+---
+import { siteConfig } from '../config/site';
+---
+<footer class="mt-12 border-t border-base-300/70 py-8">
+  <div class="container-shell space-y-2 text-sm opacity-80">
+    <p>© {new Date().getFullYear()} · Site statique Astro · Sans base de données</p>
+    <p>
+      Contact:
+      <a class="link link-primary" href={siteConfig.primaryContact.href} target="_blank" rel="noreferrer">{siteConfig.primaryContact.label}</a>
+    </p>
+  </div>
+</footer>

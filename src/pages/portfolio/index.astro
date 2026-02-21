@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getPublishedProjects } from '../../lib/content';
+
+const projects = await getPublishedProjects();
+---
+<Layout title="Portfolio" description="Sélection de projets" path="/portfolio">
+  <section>
+    <h1 class="text-4xl">Portfolio</h1>
+    <p class="mt-2 text-base-content/70">Une sélection de projets avec enjeux, stack et résultats.</p>
+  </section>
+  <section class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </section>
+</Layout>

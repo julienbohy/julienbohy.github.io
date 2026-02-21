@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: silk --default, dark --prefersdark;
+}
+
+@layer base {
+  html,
+  body {
+    @apply min-h-full;
+  }
+
+  body {
+    @apply bg-base-100 text-base-content antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .container-shell {
+    @apply mx-auto w-full max-w-6xl px-4 md:px-6;
+  }
+
+  .prose-content {
+    @apply space-y-4 leading-7 text-base-content/80;
+  }
+
+  .prose-content h2 {
+    @apply mt-8 text-2xl text-base-content;
+  }
+}
