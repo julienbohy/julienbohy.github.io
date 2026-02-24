@@ -5,6 +5,7 @@ date: 2026-02-24
 tags: [backend, php, symfony, software-craftsmanship]
 series: fondations
 draft: false
+cover: /images/blog/intro-2.png
 readingTime: 5
 ---
 
